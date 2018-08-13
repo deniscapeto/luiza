@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Luizalabs.EmployeeManager.API.DAL;
+using Luizalabs.EmployeeManager.API.Models;
 using System.Web.Http;
+using Unity;
+using Unity.Lifetime;
 
 namespace Luizalabs.EmployeeManager.API
 {
@@ -10,6 +11,10 @@ namespace Luizalabs.EmployeeManager.API
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            var container = new UnityContainer();
+            container.RegisterType<IEmployeeRepository, EmployeeRepository>(new HierarchicalLifetimeManager());
+            container.RegisterInstance<IEmployeeContext>(EmployeeContextFactory.GetInstance());
+            config.DependencyResolver = new UnityResolver(container);
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -19,12 +24,6 @@ namespace Luizalabs.EmployeeManager.API
                 routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            //config.Routes.MapHttpRoute(
-            //    name: "EmployeeApi",
-            //    routeTemplate: "{controller}/{page_size}/{page}",
-            //    defaults: new { page_size = RouteParameter.Optional, page = RouteParameter.Optional }
-            //);
         }
     }
 }

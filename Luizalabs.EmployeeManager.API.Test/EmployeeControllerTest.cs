@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http.Results;
-using Luizalabs.EmployeeManager.API.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,14 +14,6 @@ namespace Luizalabs.EmployeeManager.API.Test
     public class EmployeeControllerTest
     {
         string apiUrl = "http://localhost:8000/";
-
-        class Employee
-        {
-            long id { get; set; }
-            string name { get; set; }
-            string email { get; set; }
-            string department { get; set; }
-        }
 
         [TestMethod]
         public void List_ShouldReturnHTTPOK200()
@@ -62,10 +53,21 @@ namespace Luizalabs.EmployeeManager.API.Test
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(apiUrl);
-            var employeeId = 10;
+            var employeeId = 14;
 
             var response = client.DeleteAsync($"employee/{ employeeId }").Result;
             Assert.AreEqual(System.Net.HttpStatusCode.OK,response.StatusCode);
+        }
+
+        [TestMethod]
+        public void Delete_ShouldReturnHTTPNotFound404IfEmployeeIdDoesntExist()
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(apiUrl);
+            var employeeId = 0;
+
+            var response = client.DeleteAsync($"employee/{ employeeId }").Result;
+            Assert.AreEqual(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

@@ -8,13 +8,19 @@ using System.Web;
 
 namespace Luizalabs.EmployeeManager.API.DAL
 {
-    public class EmployeeContext : DbContext
+    public interface IEmployeeContext
+    {
+        DbSet<Employee> Employees { get; set; }
+        int SaveChanges();
+
+    }
+    public class EmployeeContext : DbContext , IEmployeeContext
     {
         public EmployeeContext() : base("EmployeeContext")
         {
         }
 
-        public DbSet<Employee> employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
