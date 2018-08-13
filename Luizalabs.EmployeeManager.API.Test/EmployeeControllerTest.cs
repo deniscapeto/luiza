@@ -7,13 +7,22 @@ using System.Web.Http.Results;
 using Luizalabs.EmployeeManager.API.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Luizalabs.EmployeeManager.API.Test
 {
     [TestClass]
     public class EmployeeControllerTest
     {
-        string apiUrl = "http://localhost:8000/Luizalabs.EmployeeManager.API/";
+        string apiUrl = "http://localhost:8000/";
+
+        class Employee
+        {
+            long id { get; set; }
+            string name { get; set; }
+            string email { get; set; }
+            string department { get; set; }
+        }
 
         [TestMethod]
         public void List_ShouldReturnHTTPOK200()
@@ -42,6 +51,9 @@ namespace Luizalabs.EmployeeManager.API.Test
             var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
 
             var response = client.PostAsync("employee/", content).Result;
+
+            int _generatedId = ((JObject)JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result)).Value<int>("id");
+
             Assert.AreEqual(System.Net.HttpStatusCode.Created,response.StatusCode );
         }
 
@@ -50,7 +62,7 @@ namespace Luizalabs.EmployeeManager.API.Test
         {
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(apiUrl);
-            var employeeId = 1;
+            var employeeId = 10;
 
             var response = client.DeleteAsync($"employee/{ employeeId }").Result;
             Assert.AreEqual(System.Net.HttpStatusCode.OK,response.StatusCode);

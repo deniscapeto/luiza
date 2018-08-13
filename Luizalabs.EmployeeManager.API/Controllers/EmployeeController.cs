@@ -1,44 +1,74 @@
-﻿using System;
+﻿using Luizalabs.EmployeeManager.API.DAL;
+using Luizalabs.EmployeeManager.API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
+using PagedList;
 
 namespace Luizalabs.EmployeeManager.API.Controllers
 {
     public class EmployeeController : ApiController
     {
         [Route("employee")]
-        public JsonResult<List<Employee>> Get(int page_size, int page)
+        public IHttpActionResult Get(int page_size, int page)
         {
-            List<Employee> employees = new List<Employee>()
+            try
             {
-                new Employee(){ name = "Denis", email  = "deniscapeto@gmail.com",  department ="TI"  },
-                new Employee(){ name = "Renato", email  = "renato@gmail.com",  department ="TI"  },
-                new Employee(){ name = "Rogerio", email  = "rogerio@gmail.com",  department ="TI"  }
-            };
+                EmployeeContext context = new EmployeeContext();
+                var pagedList =context.employees
+                    .OrderBy(e => e.name)
+                    .ToPagedList<Employee>(page, page_size);
+                List<Employee> employees = pagedList.ToList();
 
-            return Json(employees);
+                return Json(employees);
+            }
+            catch (Exception ex)
+            {
+                return new StatusCodeResult(HttpStatusCode.InternalServerError, Request);
+            }
         }
 
         [Route("employee")]
-        public StatusCodeResult Post(Employee employee)
+        public IHttpActionResult Post(Employee employee)
         {
-            return new StatusCodeResult(HttpStatusCode.Created, Request);
+            try
+            {
+                EmployeeContext context = new EmployeeContext();
+                Employee employees = context.employees.Add(employee);
+                context.SaveChanges();
+
+                return Created("", employee);
+            }
+            catch (Exception ex)
+            {
+                return new StatusCodeResult(HttpStatusCode.InternalServerError, Request);
+            }
         }
 
-        public StatusCodeResult Delete(int id)
+        [Route("employee/{id}")]
+        public IHttpActionResult Delete(int id)
         {
-            return new StatusCodeResult(HttpStatusCode.OK, Request);
-        }
-    }
+            try
+            {
+                EmployeeContext context = new EmployeeContext();
+                Employee employeeFound = context.employees.Find(id);
 
-    public class Employee
-    {
-        public string name { get; set; }
-        public string email { get; set; }
-        public string department { get; set; }
+                if (employeeFound == null)
+                    return NotFound();
+
+                Employee employees = context.employees.Remove(employeeFound );
+                context.SaveChanges();
+
+                return new StatusCodeResult(HttpStatusCode.OK, Request);
+            }
+            catch (Exception ex)
+            {
+                return new StatusCodeResult(HttpStatusCode.InternalServerError, Request);
+            }
+        }
     }
 }
