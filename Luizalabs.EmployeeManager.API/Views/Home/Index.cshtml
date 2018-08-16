@@ -1,23 +1,29 @@
 ﻿<div class="jumbotron">
-    <h1>Luizalabs Employee Manager</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h2>Luizalabs Employee Manager</h2>
+    <p class="lead">Api developed for employee information service integration</p>
+    <p><a href="https://www.getpostman.com/apps" class="btn btn-primary btn-lg">Download Postman and try it &raquo;</a></p>
 </div>
 <div class="row">
     <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
+        <h2>List</h2>
+        <p>List can be used to get employees information. Very easy to use it. Just do a GET request passing the page_size and the number of the page. eg.: <a href="#">http://localhost:8000/employee/?page_size=2&page=2</a> </p>
     </div>
     <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
+        <h2>Add</h2>
+        <p>You can add new employees by making a POST request with the employee information in the request's body.</p>
+        <p>Endpoint: <a href="#">http://localhost:8000/employee/</a></p>
+        <p>Body example:</p>
+        <p>
+<code style=" display: block;  white-space: pre-wrap">{
+    "name": "Rodrigo Carvalho",
+    "email": "rodrigo@luizalabs.com",
+    "department": "IntegraCommerce"
+}</code>
+        </p>
     </div>
     <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
+        <h2>Delete</h2>
+        <p>It's also possible to remove an employee. All you have to do is make a DELETE request giving the employee's Id</p>
+        <p>Endpoint: <a href="#">http://localhost:8000/employee/5</a></p>
     </div>
 </div>
